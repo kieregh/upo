@@ -42,19 +42,16 @@ $content .= (isset($sessUserId) && $sessUserId > 0)
 						</div>
 						<div class="login_area">
 							<form class="fieldArea" name="Loginform" action="' . SITE_URL . 'login" method="post">
-							<label>' . USERNAME . ':</label>
 							' . $fields->textBox(array("onlyField" => true, "name" => "email", "extraAtt" => 'placeholder="' . USERNAME . '"', 'value' => $email)) . '
-							<div class="clearfix"></div>
-							<label>' . PASSWORD . ':</label>
+							
 							' . $fields->Password(array("onlyField" => true, "name" => "password", "extraAtt" => 'placeholder="' . PASSWORD . '"', 'value' => "$password")) . '
 							<div class="clearfix"></div>
 							<div class="signin_label"><label><input type="checkbox" id="remember" name="remember" ' . $checked . ' value="y"/> ' . STAYSIGNIN . '</label></div>
 							<div class="forgot_label"><a href="' . SITE_URL . 'forgot" title="' . FORGOTPASSWORD . '">' . FORGOTPASSWORD . '</a></div>
 							<div class="clearfix"></div>
+							<p>' . NOTMEMBERYET . CLICKHERE . ' <a href="' . SITE_URL . 'signup">' . SIGNUP . '</a></p>
 							<div class="login_btn"><input type="submit" value="' . LOGIN . '" name="submitLogin"></div>
 							</form>
-							<div class="clearfix"></div>
-							<p>' . NOTMEMBERYET . CLICKHERE . ' <a href="' . SITE_URL . 'signup">' . SIGNUP . '</a></p>
 						</div>
 					</div>
 					<div class="clearfix"></div>';

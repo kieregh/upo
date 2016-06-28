@@ -1394,7 +1394,7 @@ function postlisthtml($fetchValues, $i ,$withclass = true) {
 	$pDetail .= '<div class="icon-serial">'.$i.'</div>
 					<div class="icons-wrapper">
 						<a href="javascript:void(0);" class="' . $upACt . ' document up" id="up' . $id . '" onclick="voting(\'' . $id . '\',\'u\',\'p\',\'' . $islogin . '\',this.id)">UP</a>
-						<div class="like_point" id="vote-' . $id . '">' . $total_vote. '</div>
+						<div class="like_point" id="vote-' . $id . '" '.($total_vote==0?'style="margin:0;"':'').'>' . $total_vote. '</div>
 						<a href="javascript:void(0);" class="' . $downACt . ' group down" id="down' . $id . '" onclick="voting(\'' . $id . '\',\'d\',\'p\',\'' . $islogin . '\',this.id)" >DOWN</a>
 					 </div>';
 
@@ -1415,9 +1415,9 @@ function postlisthtml($fetchValues, $i ,$withclass = true) {
 
 	$pDetail .=
 		'<div class="hot_item_heading">
-						<div>' . $titleUrl;
+						<div class="hot_item_title">' . $titleUrl;
 	if (getDomainFROMUrl($url) != NULL) {
-		$pDetail .= '&nbsp;&nbsp;&nbsp;&nbsp;<p><a href="' . SITE_URL . 'domain/' . newgetDomainFROMUrl($url) . '" target="_self">(' . newgetDomainFROMUrl($url) . ')</a></p>';
+		$pDetail .= '&nbsp;<a href="' . SITE_URL . 'domain/' . newgetDomainFROMUrl($url) . '" target="_self" class="link_url">(' . newgetDomainFROMUrl($url) . ')</a>';
 	}
 	$pDetail .= '</div>
 						' . ($embeddcode != "" || $embeddcode != NULL ?
