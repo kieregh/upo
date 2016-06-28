@@ -1,0 +1,111 @@
+<script src="<?php echo SITE_JS;?>modernizr-transitions.js" type="text/javascript"></script>
+<div class="inner-heading"><?php echo $type; ?></div>
+<div class="alignemnt-masonry">
+	<section>
+        <div class="container alignemnt">
+			<?php echo $mainContent; ?>
+			<div class="clr"></div>			
+        </div>
+
+	</section>
+ </div>
+<nav id="page-nav">
+  <a href="page/2/"></a>
+</nav>
+<?php if(getListingCount()>0){ ?>
+<script src="<?php echo SITE_JS;?>jquery.masonry.js"></script>
+<script src="<?php echo SITE_JS;?>jquery.infinitescroll.min.js"></script>
+<script type="text/javascript">
+
+jQuery(function(){
+  jQuery("#page-nav").load(function() {
+    jQuery("#container").masonry(); //this tweak is a fix on chrome and safari browser
+  });
+
+  jQuery('#container').masonry({
+    // options
+    itemSelector : '.box',
+    isResizable : 'true',
+    columnWidth : 10
+  });
+
+jQuery("#container").infinitescroll({
+  navSelector  : '#page-nav',    // selector for the paged navigation 
+  nextSelector : '#page-nav a',  // selector for the NEXT link (to page 2)
+  itemSelector : '.box',     // selector for all items you'll retrieve
+  donetext  : '<?php echo POSTLOADMSG;?>',
+  loadingImg : '<?php echo SITE_IMG; ?>loading.gif',
+  loadingText : '',
+  debug: false,
+  errorCallback: function() { 
+		$('#infscr-loading').animate({opacity: .8},100).fadeOut('normal');   
+  }
+  },
+  function( newElements ) {
+	var $newElems = $( newElements );
+	
+	setTimeout( function(){
+	  $newElems.imagesLoaded(function(){
+		jQuery("#container").masonry('appended',$newElems); 
+		jQuery("#container").masonry('reload'); 
+	  });
+	  
+	}, 10 );
+	
+  }
+);
+
+});
+
+function deletehistory(){
+	
+	if(confirm('Are you sure?'))
+	{	
+	$.ajax({
+			type		:	"POST",
+			dataType	:	"json",
+			url			:	'<?php echo SITE_MOD; ?>user/ajax.user.php',
+			data		:	{
+								removehistory 	:  true							
+							},
+			success		:	function(data){
+								
+								location.reload();
+							}
+		});
+	}
+}
+function MakeSponcer(id,type,login)
+{
+	if(id>0 && login=="yes")
+	{
+		$.ajax({
+			type		:	"POST",
+			dataType	:	"json",
+			url			:	'<?php echo SITE_MOD; ?>user/ajax.user.php',
+			data		:	{
+								makeSponcer 	:  true,
+								postid			:	id
+													
+							},
+			success		:	function(data){
+								
+								location.reload();
+							}
+		});
+	}
+	
+}
+</script> 
+
+<script type="text/javascript">
+	function showMe(num)
+    {
+        $('#div_one'+num).siblings('.section').hide();
+        $('#div_one'+num).fadeToggle(5);
+    }
+</script>
+
+<?php } ?>
+
+

@@ -1,0 +1,378 @@
+<?php
+class Home {
+	private $id;
+	private $db;
+	private $fields;
+	private $module;
+	
+	function __construct($module, $id=0,$objPost=NULL) {
+		global $fields, $db,$sessUserId,$sessUsername,$type;
+		$this->db = $db;
+		$this->module = $module;
+		$this->id = $id;
+		$this->fields = $fields;
+		$this->sessUserId = $sessUserId;
+		$this->sessUsername = $sessUsername;
+		$this->type = $type;
+		$this->objPost = $objPost;
+		
+	}
+	public function homeContent($pageNo) {
+		$content = NULL;
+		$homeAdCount = $this->db->query("select id from tbl_advertisement where pageId='1' and slotId='1'");
+		if(mysql_num_rows($homeAdCount) > 0)
+		{
+			$content .= '<div class="adv_banner_1"></div>';
+		}
+				$content.='<div class="flclear">&nbsp;</div>
+						<div class="hot_listing">
+							<ul class="bxslider">'.
+							  $this->spoceredlisting().
+							'</ul>
+					</div>';
+								
+				if($this->sessUserId > 0)
+				{	
+					$content.='<div class="clear"></div>
+					<div class="host_left_tabs">
+						<ul>';	
+					$sqlGetReddit = $this->db->select("tbl_multireddit","multiRedditName,id","userId='".$this->sessUserId."'",'','',0);
+					$content.='<li>subreddits....</li>';
+					while($fetchRes = mysql_fetch_array($sqlGetReddit))
+					{
+					$content.='	<li><a href="'.SITE_URL.'me/'.$fetchRes["id"].'/'.$fetchRes['multiRedditName'].'/" >'.$fetchRes['multiRedditName'].'</a></li>';
+								
+					}
+					$content.='</ul>
+						'.$this->fields->button(array("name"=>"createRedditbtn","type"=>"submit","value"=>"Create","extraAtt"=>'onClick="displayForm();"')).'
+						<form name="multiRedditForm" id="multiRedditForm" method="post" action="'.SITE_URL.'me/">
+						'.$this->fields->textBox(array("onlyField"=>true,"name"=>"multiRedditName","id"=>"multiRedditName","extraAtt"=>'style="display:none"')).'
+						'.$this->fields->button(array("name"=>"submitReddit","type"=>"submit","value"=>"Add","extraAtt"=>'style="display:none"')).'
+						</form></div>';
+				}
+				$classOfListing = ($this->sessUserId > 0) ? '<div class="hot_listing hot_page_section">':'<div class="hot_listing">'; 	
+						$content.=$classOfListing.'
+							<ul id="container">
+								'.$this->postlisting($pageNo).'
+							</ul>
+						</div>';
+		
+		return $content;
+	}
+	public function postlisting($pageNo){
+		$content = NULL;
+		$CATcond='';
+		$hidecond='';
+		if($this->sessUserId >0) {
+			$unSubStr = getTableValue($this->db, 'tbl_users', "id ='".$this->sessUserId."'", 'unsubscribeCat');
+			$CATcond =($unSubStr!='')?'AND A.catId NOT IN('.$unSubStr.')':'';
+			$sqlGetHidden = $this->db->select("tbl_hide","refId","uId='$this->sessUserId' AND refType='p'",'','',0);
+			if ( mysql_num_rows($sqlGetHidden) > 0 ) {
+				while($HiddenItem = mysql_fetch_assoc($sqlGetHidden)) {
+						$hidecond .= " AND A.id !='".$HiddenItem["refId"]."'";
+				}
+			}
+			else {
+				$hidecond='';
+			}
+		}
+		$whereCondition = $hidecond.$CATcond;
+		$selRes="SELECT A.*, B.refId, B.refType, B.voteType, tbl_categories.categoryName, tbl_users.username, A.embeddcode, COUNT(B.id) AS totalVotes FROM tbl_post AS A INNER JOIN tbl_categories ON (tbl_categories.id = A.catId) INNER JOIN tbl_users ON (A.uid = tbl_users.id) LEFT JOIN `tbl_votes` AS B ON A.id=B.refId AND refType ='p' AND voteType ='u' AND B.createdDate<'".date("Y-m-d 00:00:00")."' where A.isActive='y' ".$whereCondition." GROUP BY A.id ORDER BY totalVotes DESC";
+		$qSelRes = $this->db->query($selRes);	
+		$totalRows = mysql_num_rows($qSelRes);
+		$pager  = getPagerData($totalRows, LIMIT, $pageNo);
+		if($pageNo<=$pager->numPages){
+			$offset = $pager->offset;  
+			if($offset<0) $offset=0;
+				 $limit  = $pager->limit;
+				
+			$page  = $pager->page;
+			$selRes = $selRes." limit $offset, $limit";
+			
+			$qSelRes = $this->db->query($selRes);
+			if ( $totalRows > 0 ) {
+				while($fetchValues = mysql_fetch_array($qSelRes)) {
+
+					$content .= postlisthtml($fetchValues);
+				}
+			} 
+
+			
+		}
+		return $content;
+	}
+	
+	public function headerPanel() {
+		global $module;
+		$content = NULL;
+		$content = '<div id="header">
+    	<div class="cetegory_top">
+        	<div class="category_section">
+			<a class="hover" href="javascript:showMe(1);">
+				<span class="menu home">MY SUBREDDITS<img src="'.SITE_IMG.'cetegory_arrow.png" /></span>
+			</a>
+			<div class="section home-things visible" id="div_one1" style="display: none;">
+			  <div class="section-contents">
+			  	<ul>';
+				$qrySelCategory = $this->db->query("SELECT * FROM tbl_categories WHERE isActive='y'");
+			if(mysql_num_rows($qrySelCategory)>0)
+			{
+				while($fetchValues = mysql_fetch_array($qrySelCategory))
+				{
+					$categoryName = $this->db->filtering($fetchValues["categoryName"], 'output', 'string', 'ucwords');
+					$content.='<li><a href="'.SITE_URL.'category/'.str_replace('/',' ' ,$categoryName).'/" title="'.$categoryName.'">'.strtoupper($categoryName).'</a></li> ';
+				}
+			}
+				$content .= '
+				</ul>
+			  </div>
+			</div> ';
+			$qrySelCategory = $this->db->query("SELECT * FROM tbl_categories WHERE isActive='y' LIMIT 0,10");
+			if(mysql_num_rows($qrySelCategory)>0)
+			{
+				while($fetchValues = mysql_fetch_array($qrySelCategory))
+				{
+					$categoryName = $this->db->filtering($fetchValues["categoryName"], 'output', 'string', 'ucwords');
+					$content.=' - <a href="'.SITE_URL.'category/'.str_replace('/',' ' ,$categoryName).'/" title="'.$categoryName.'">'.strtoupper($categoryName).'</a>';
+				}
+			}
+			
+			$content.='</div>
+        </div>
+        <div class="main_wrapper">';
+			$logo = getTableValue($this->db," tbl_settings", "", "img", 0);
+			
+        	$content.= '<div class="logo"><div class="column-4"><a href="'.SITE_URL.'"><img src="'.SITE_UPD.'logo/150x60/'.$logo.'" /></a></div></div>
+            <div class="mobile_toggle"><a href="#"><img src="'.SITE_IMG.'arrow2.png" /></a></div>
+            <div id="mobile_toggle">
+            	<ul>
+                	<li>
+						<div class="mobile_search">
+							<form action="'.SITE_URL.'search" method="post">
+								<input type="text" id="search" name="search" placeholder="Search..."/>
+								<input type="submit" value="" name="btn_search" style="display:none;" />
+							</form>
+						</div>
+					</li>
+                    <li><a href="'.SITE_URL.'" '.($module == '' ? 'class="active"' : '').'>'.HOT.'</a></li>
+                    <li><a href="'.SITE_URL.'new/">'.NEWPOST.'</a></li>
+					<li><a href="'.SITE_URL.'rising/">'.RISING.'</a></li>
+                    <li><a href="'.SITE_URL.'contraversial/">'.CONTROVERSIAL.'</a></li>
+                    <li><a href="'.SITE_URL.'top/">'.TOP.'</a></li>
+                    <li><a href="'.SITE_URL.'gilded/">'.GILDED.'</a></li>
+					'.(isset($_SESSION["sessUserId"]) && $_SESSION["sessUserId"] > 0 
+						? '<li><a href="'.SITE_URL.'logout">'.LOGOUT.'</a></li>' 
+						: '<li><a href="'.SITE_URL.'">'.LOGIN.'</a></li>
+						  <li><a href="'.SITE_URL.'signup">'.SIGNUP.'</a></li>').'
+                </ul>
+            </div>
+            <div class="nav column-11">
+            	<ul>
+                	<li><a href="'.SITE_URL.'" '.($module == '' ? ' class="active"' : '').'>d'.HOT.'</a></li>
+                    <li><a href="'.SITE_URL.'new/">'.NEWPOST.'</a></li>
+					<li><a href="'.SITE_URL.'rising/">'.RISING.'</a></li>
+                    <li><a href="'.SITE_URL.'contraversial/">'.CONTROVERSIAL.'</a></li>
+                    <li><a href="'.SITE_URL.'top/">'.TOP.'</a></li>
+                    <li><a href="'.SITE_URL.'gilded/">'.GILDED.'</a></li>
+					'.(isset($_SESSION["sessUserId"]) && $_SESSION["sessUserId"] > 0 
+						? '<li><a href="'.SITE_URL.'logout">'.LOGOUT.'</a></li>' 
+						: '<li><a href="'.SITE_URL.'login">'.LOGIN.'</a></li>').'
+					
+                </ul>
+            </div>
+            <div class="top_search column-3">
+				<form action="'.SITE_URL.'search" method="post">
+					<input type="text" id="search" name="search" placeholder="Search..."/>
+					<input type="submit" value="" name="btn_search" style="display:none;" />
+				</form>
+			</div>
+        </div>
+      <div class="clearfix"></div>
+    </div>';
+		return $content;
+	}
+	
+	public function footerPanel() {
+		$content = NULL;
+		$qrysel= $this->db->select("tbl_content","*","isActive='y'",'','',0);
+		$NoOfPages = mysql_num_rows($qrysel);
+		$halfpage = (int)($NoOfPages/2);
+		$content = '<a href="#" class="scrollup">Scroll</a><div class="footer-section">
+    	<div class="main_wrapper">
+        	<div class="column-3">
+            	<ul class="about">
+                <h3>'.ABOUTUS.'</h3>';
+				$qrysel= $this->db->query("select pId,pageName from tbl_content where isActive='y' limit 0,".$halfpage);
+				if(mysql_num_rows($qrysel)>0)
+				{
+					while($qryres = mysql_fetch_array($qrysel))
+					{
+						$pId = $this->db->filtering($qryres["pId"],'output','int','');
+						$pageName = $this->db->filtering($qryres["pageName"],'output','string','ucwords');
+				
+						$content.='<li><a href="'.SITE_URL.'pages/'.$pId.'/'.urlencode($pageName).'" title="'.$pageName.'">'.$pageName.'</a></li>';
+				
+					}
+				}
+               $content.='</ul>
+            </div>
+            <div class="column-3">
+            	<ul class="about">
+                <h3>'.HELP.'</h3>';
+				$qrysel= $this->db->query("select pId,pageName from tbl_content where isActive='y' limit ".$halfpage.",".$NoOfPages);
+				if(mysql_num_rows($qrysel)>0)
+				{
+					while($qryres = mysql_fetch_array($qrysel))
+					{
+						$pId = $this->db->filtering($qryres["pId"],'output','int','');
+						$pageName = $this->db->filtering($qryres["pageName"],'output','string','ucwords');
+				
+						$content.='<li><a href="'.SITE_URL.'pages/'.$pId.'/'.urlencode($pageName).'" title="'.$pageName.'">'.$pageName.'</a></li>';
+				
+					}
+				}
+               $content.='</ul>
+            </div>
+			<div class="languagelist">';
+			$currentUrl = selfURL();
+			if(isset($this->sessUsername)&& $this->sessUsername=="kevin"){$content.=selectLanguage($currentUrl);}
+			$content.='</div> 
+           <div class="column-6">
+            	<h3>'.FOLLOWUS.'</h3>
+                <ul class="follows">
+                	<li><a href="#"><img src="'.SITE_IMG.'youtube_icon.png" /></a></li>
+                    <li><a href="#"><img src="'.SITE_IMG.'gmail_icon.png" /></a></li>
+                    <li><a href="#"><img src="'.SITE_IMG.'in-icon.png" /></a></li>
+                    <li><a href="#"><img src="'.SITE_IMG.'fb_icon.png" /></a></li>
+                    <li><a href="#"><img src="'.SITE_IMG.'tweet_icon.png" /></a></li>
+                    <li><a href="#"><img src="'.SITE_IMG.'pinterest_icon.png" /></a></li>
+                    <li class="nct_logo"><a href="http://www.ncrypted.com/" target="_blank"><img src="'.SITE_IMG.'nct_logo.png" alt="web development" /></a></li>
+                </ul>
+                <div class="copyright_txt">&copy; Copyright 2014, '.SITE_NM.' - '.ALLRIGHTRESERVE.' </div>
+            </div>
+        </div>
+    </div>';
+		return $content;
+	}
+	
+	public function leftPanel() {
+		$content = NULL;
+		$content = 'left content';
+		return $content;
+	}
+	
+	public function getsahreform($postid){
+		$content=NULL;
+		$content.='<div class="submit_new_post">
+            			<form method="post" name="share" id="share" class="filedarea">
+						<div class="post_box">
+							'.$this->fields->textBox(array("label"=>SENDTHISLINKTO.MEND_SIGN,"name"=>"linkuser","extraAtt"=>'placeholder="'.EMAIL.'"',"class"=>"required email")).'	
+							<br>
+							<label id="lbl_msg"></label>
+							'.$this->fields->hidden(array("name"=>"post_id","value"=>$postid)).'
+							'.$this->fields->hidden(array("name"=>"action","value"=>"sharepost")).'
+							
+							'.$this->fields->textBox(array("label"=>NAME,"name"=>"name","value"=>$this->sessUsername,"extraAtt"=>"readonly='readonly'")).'
+							<br>
+							'.$this->fields->textBox(array("label"=>EMAIL,"name"=>"email","extraAtt"=>'placeholder="'.YOUREMAIL.'"')).'
+							<br>
+							'.$this->fields->textarea(array("label"=>MESSAGE,"name"=>"message")).'	
+							<br>
+							<p>
+									<label for="Captcha" class="cap">'.CAPTCHA.':</label>
+								</p>
+									<span class="cpt">
+							
+					<img id="imgCaptcha" src="'.SITE_INC.'capcha/random.php" height="25" alt="Captcha Code" border="0" class="fl"/>
+					<a href="javascript:void(0)" onclick="document.getElementById(\'imgCaptcha\').src=\''.SITE_INC.'capcha/random.php?\'+Math.random();$(\'#captcha\').focus();$(\'#captcha\').val(\'\');" id="change-image" ><img id="changeCaptcha" src="'.SITE_IMG.'captcha-ref.jpg" alt="Captcha Refresh" border="0" class="fl" /></a>
+				</span><br /><br /><div class="clear"></div><label>&nbsp;</label>
+				<input name="captcha" id="captcha" type="text" class="sizeone" autocomplete="off">
+				<label id="lbl_msg_captcha" class="error"></label>
+						</div>
+						
+						<br>	
+							'.$this->fields->button(array("name"=>"shareAddform","type"=>"button","class"=>"btn-share","value"=>SHARE,"extraAtt"=>'onclick="submitsharefun(\''.$postid.'\')"')).'	
+						</form>
+					</div>';
+		return $content;
+	}
+	public function spoceredlisting(){
+		$content=NULL;
+		$sqlSponceredList = $this->db->query("SELECT 
+					tbl_post.id ,tbl_post.title,tbl_post.description,tbl_post.img,tbl_post.url,tbl_post.type, tbl_categories.categoryName,tbl_users.username,tbl_post.createdDate 
+					FROM  tbl_post 
+					inner JOIN tbl_categories ON (tbl_categories.id = tbl_post.catId) 
+					inner JOIN tbl_users ON (tbl_post.uid = tbl_users.id)
+					WHERE tbl_post.isActive='y' AND isSponcer='y'  
+					ORDER BY tbl_post.id DESC");
+			if(mysql_num_rows($sqlSponceredList)>0)
+			{
+				while($fetchValues = mysql_fetch_array($sqlSponceredList)) {
+					$id = $this->db->filtering($fetchValues["id"], 'output', 'int', '');
+					$title 			= $this->db->filtering($fetchValues["title"], 'output', 'string', 'ucwords');
+					$img 			= $fetchValues["img"];
+					$categoryName 	= $this->db->filtering($fetchValues["categoryName"], 'output', 'string', 'ucwords');
+					$username 		= $this->db->filtering($fetchValues["username"], 'output', 'string', 'ucwords');
+					$url 			= $this->db->filtering($fetchValues["url"], 'output', 'text', ''); 
+					$type 			= $this->db->filtering($fetchValues["type"], 'output', 'string', ''); 
+					$createdDate	= $this->db->filtering($fetchValues["createdDate"], 'output', 'string', '');
+				 	$cuttentDate 	= date('Y-m-d h:i:s');
+					$dateDiff 		= get_time_difference($createdDate,$cuttentDate);
+					if ( $type == 'l' ) {					
+						$titleUrl = '<a href="//'.$url.'" target="_blank" title="'.seoString(substr($title,0,75)).'">'.substr($title,0,75).'....</a>';
+					} else {
+						$titleUrl = '<a href="'.SITE_URL.'detail/'.$id.'/'.urlencode(seoString(substr($title,0,20))).'" title="'.seoString(substr($title,0,75)).'">'.substr($title,0,75).'....</a>';
+					}
+					
+        			if ( isset($this->sessUserId) && $this->sessUserId > 0 ) {
+						$islogin = "yes";
+					} else {
+						$islogin = 'no';
+					}
+					
+					$total_vote = totalVote($id,'p');
+					
+					$content .= '<li>
+									<div class="icons-wrapper">
+										<a href="javascript:void(0);" class="icon document up" onclick="voting(\''.$id.'\',\'u\',\'p\',\''.$islogin.'\')">UP</a>
+										<a href="javascript:void(0);" class="icon group down" onclick="voting(\''.$id.'\',\'d\',\'p\',\''.$islogin.'\')" >DOWN</a>
+									  <div class="like_point" id="vote-'.$id.'">'.$total_vote.'</div>
+									</div>
+									<div class="hot_item_img">
+										<a href="#" title="'.substr($title,0,75).'">';
+											if ( $img != "" ) {
+												$content .='<img src="'.SITE_UPD.'post/98x98/th1_'.$img.'" />';
+											} else {
+												$content .='<img src="'.SITE_IMG.'no_img.jpg" />';
+											}
+									$content .='</a>
+									</div>
+									<div class="hot_item_heading">
+										<div>'.$titleUrl.'</div>
+										<p>'.SUBMITTED.' '.$dateDiff.' '.BY.' <a href="#">'.$username.'</a> '.TO.' <a href="#">'.$categoryName.'</a></p>
+										<div class="comment_txt">
+											<a href="'.SITE_URL.'comments/'.$id.'/'.urlencode(substr($title,0,20)).'" title="Comments">'.COMMENTS.'</a>
+										</div>
+										<div class="share">
+											<a href="javascript:void(0);" class="share-link" id="share-'.$id.'" onclick="getsharedialog(\''.$id.'\',\''.$islogin.'\')">'.SHARE.'</a>	
+											<div id="sharedialogbox'.$id.'"></div>
+										</div>
+										
+										<div class="hide">
+											<a href="javascript:void(0);" onclick="post_hide(\''.$id.'\',\'p\',\''.$islogin.'\')">'.HIDE.'</a>
+										</div>
+										<div class="save">
+											<a href="javascript:void(0);" onclick="getSave(\''.$id.'\',\''.$islogin.'\')" id="save-'.$id.'">'.SAVE.'</a>
+										</div>
+										<div class="report">
+											<a href="javascript:void(0);" onclick="getReport(\''.$id.'\',\'p\',\''.$islogin.'\');" id="report-'.$id.'">'.REPORT.'</a>
+										</div>
+									</div>
+								</li>';
+				}
+			}
+		
+		return $content;
+	}
+}
+?>

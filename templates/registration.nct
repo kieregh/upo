@@ -1,0 +1,35 @@
+<script type="text/javascript">
+$(document).ready(function() {
+	$.validator.addMethod("comboCheck",function(value,element,arg){ return arg!=value; },"This field is required");
+	$("#frmRegi").validate({
+		rules: {
+			username: {required: true,remote:{url: SITE_URL+"modules/registration/ajax.registration.php",type: "post",data: {username: function() {return $("#username").val();}},complete: function(data){return data;}}					
+			},
+			email:{required:true,email:true,remote:{url: SITE_URL+"modules/registration/ajax.registration.php",type: "post",data: {email: function() {return $("#email").val();}},complete: function(data){return data;}}
+			},
+			password: {required	: true,minlength	:  5},
+			captcha: {required: true,remote:"<?php echo SITE_URL;?>modules/addpost/ajax.addpost.php"},
+			cpassword: {required: true,equalTo: "#password"}
+			
+		},
+		messages: {
+			username:{required:"<?php echo REQFIELD;?>",remote:"<?php echo USERNAMEEXISTS;?>"},
+			email: {required:"<?php echo REQFIELD;?>",email:"<?php echo EMAILNOTVALID;?>",remote:"<?php echo EMAILEXIST;?>"},
+			password:{required:"<?php echo REQFIELD;?>",minlength:"<?php echo FIVECHARACTOR;?>"},
+			captcha: {required: "<?php echo REQFIELD;?>"},//CHECKCAPTCHA
+			cpassword: {required:"<?php echo REQFIELD;?>",equalTo:"<?php echo PASSSAME;?>"}
+			
+		}
+	});
+});
+
+function showMe(num)
+    {
+        $('#div_one'+num).siblings('.section').hide();
+        $('#div_one'+num).fadeToggle(5);
+    }
+	
+</script>
+<div id="mainContent">
+	<?php echo $mainContent; ?>
+</div>

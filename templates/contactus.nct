@@ -1,0 +1,45 @@
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	$.validator.addMethod("humanName", function(value, element) {
+		return this.optional(element) || /^[a-zA-Z]+[a-zA-Z\.\-\s\' ]*[a-zA-Z]*$/i.test(value);
+	}, "Invalid name.");
+	
+	$.validator.addMethod("phoneNumber", function(value, element) {
+		return this.optional(element) || /^[0-9+\.\-\s()]*$/g.test(value);
+	}, "Invalid phone.");
+	
+	
+	$("#frmContact").validate({
+		rules: {
+			name: { 
+				required: true,
+				humanName:true
+				  },
+			phone: {
+				phoneNumber:true,
+				maxlength:20
+			},
+			email: { 
+				required: true,
+				email:true
+			}
+			
+			
+		},
+		messages: {
+			name: {
+				required: "This field is required"
+				
+			},
+			email: {
+				required: "This field is required",
+				email: "Invalid email"
+				
+			}
+		}
+	});
+});
+</script>
+<div id="mainContent">
+	<?php echo $mainContent; ?>
+</div>

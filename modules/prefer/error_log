@@ -1,0 +1,2 @@
+[09-Apr-2015 08:15:27 America/Denver] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/nctp/public_html/demo/bookitt/modules/home/class.home.php:811) in /home/nctp/public_html/demo/bookitt/modules/prefer/index.php on line 149
+[09-Apr-2015 08:18:08 America/Denver] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/nctp/public_html/demo/bookitt/modules/home/class.home.php:811) in /home/nctp/public_html/demo/bookitt/modules/prefer/index.php on line 149

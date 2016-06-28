@@ -1,0 +1,24 @@
+<script type="text/javascript">
+	function showMe(num)
+    {
+        $('#div_one'+num).siblings('.section').hide();
+        $('#div_one'+num).fadeToggle(5);
+    }
+</script>
+<?php
+	if(strlen($headTitle) > 52){
+		$dot='...';
+	}
+	else{
+		$dot='';
+	}
+ ?>
+<div class="inner-heading"><?php echo substr($headTitle,0,52).$dot; ?></div>
+<div class="alignemnt-masonry">
+	<section>
+        <div class="container alignemnt">
+			<?php echo $mainContent; ?>
+			<div class="clr"></div>			
+        </div>
+	</section>
+ </div>

@@ -1,0 +1,24 @@
+[18-Dec-2014 14:43:13 UTC] PHP Warning:  imagecreatefromjpeg(): gd-jpeg: JPEG library reports unrecoverable error:  in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665
+[18-Dec-2014 14:43:13 UTC] PHP Warning:  imagecreatefromjpeg(): '/home/nctp/public_html/demo/bookitt/upload/post/98x98/a1e00a31b4445dd104de1bdc9900e418.JPG' is not a valid JPEG file in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665
+[18-Dec-2014 14:43:13 UTC] PHP Warning:  imagesx() expects parameter 1 to be resource, boolean given in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 674
+[18-Dec-2014 14:43:13 UTC] PHP Warning:  imagesy() expects parameter 1 to be resource, boolean given in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 675
+[18-Dec-2014 14:43:13 UTC] PHP Warning:  Division by zero in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 681
+[18-Dec-2014 14:43:13 UTC] PHP Warning:  imagecreatefromjpeg(): gd-jpeg: JPEG library reports unrecoverable error:  in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665
+[18-Dec-2014 14:43:13 UTC] PHP Warning:  imagecreatefromjpeg(): '/home/nctp/public_html/demo/bookitt/upload/post/500x500/a1e00a31b4445dd104de1bdc9900e418.JPG' is not a valid JPEG file in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665
+[18-Dec-2014 14:43:13 UTC] PHP Warning:  imagesx() expects parameter 1 to be resource, boolean given in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 674
+[18-Dec-2014 14:43:13 UTC] PHP Warning:  imagesy() expects parameter 1 to be resource, boolean given in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 675
+[18-Dec-2014 14:43:13 UTC] PHP Warning:  Division by zero in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 681
+[18-Dec-2014 14:44:22 UTC] PHP Warning:  imagecreatefromjpeg(): gd-jpeg: JPEG library reports unrecoverable error:  in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665
+[18-Dec-2014 14:44:22 UTC] PHP Warning:  imagecreatefromjpeg(): '/home/nctp/public_html/demo/bookitt/upload/post/98x98/4d6394a74bf2676d41b67bc8ffd2e5a2.JPG' is not a valid JPEG file in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665
+[18-Dec-2014 14:44:22 UTC] PHP Warning:  imagesx() expects parameter 1 to be resource, boolean given in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 674
+[18-Dec-2014 14:44:22 UTC] PHP Warning:  imagesy() expects parameter 1 to be resource, boolean given in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 675
+[18-Dec-2014 14:44:22 UTC] PHP Warning:  Division by zero in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 681
+[18-Dec-2014 14:44:22 UTC] PHP Warning:  imagecreatefromjpeg(): gd-jpeg: JPEG library reports unrecoverable error:  in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665
+[18-Dec-2014 14:44:22 UTC] PHP Warning:  imagecreatefromjpeg(): '/home/nctp/public_html/demo/bookitt/upload/post/500x500/4d6394a74bf2676d41b67bc8ffd2e5a2.JPG' is not a valid JPEG file in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665
+[18-Dec-2014 14:44:22 UTC] PHP Warning:  imagesx() expects parameter 1 to be resource, boolean given in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 674
+[18-Dec-2014 14:44:22 UTC] PHP Warning:  imagesy() expects parameter 1 to be resource, boolean given in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 675
+[18-Dec-2014 14:44:22 UTC] PHP Warning:  Division by zero in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 681
+[05-Jan-2015 19:41:05 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 10788 bytes) in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665
+[05-Jan-2015 19:41:15 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 10788 bytes) in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665
+[05-Jan-2015 19:41:20 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 10788 bytes) in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665
+[05-Jan-2015 19:45:51 UTC] PHP Fatal error:  Allowed memory size of 33554432 bytes exhausted (tried to allocate 10788 bytes) in /home/nctp/public_html/demo/bookitt/includes/functions/function.php on line 665

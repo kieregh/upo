@@ -1,0 +1,313 @@
+<!--http://jsfiddle.net/code_snips/w4y75/-->
+<script src="<?php echo SITE_JS;?>modernizr-transitions.js" type="text/javascript"></script>
+<?php
+if($type=='CREATE_ADVERTISEMENT'){$type=CREATE_ADVERTISEMENT;}
+?>
+<div class="inner-heading"><?php echo $type; ?></div>
+<div class="alignemnt-masonry">
+	<section>
+        <div class="container alignemnt">
+			<?php echo $mainContent; ?>
+			<div class="clr"></div>			
+        </div>
+
+	</section>
+ </div>
+<script type="text/javascript">
+$(function()  {
+	$.validator.addMethod("divisible", function(value, element) {
+		var clicks = parseInt($("#hiden_clicks").val());
+		value = parseInt(value);
+		//alert(clicks + " " + value + (clicks%value === 0));
+		return !(clicks%value === 0);
+	},"You have entered wrong budget");
+	
+	$.validator.addMethod("imageonly", function(value,element){
+        var pathLength = value.length;
+        var lastDot = value.lastIndexOf(".");
+        var fileType = value.substring(lastDot,pathLength).toLowerCase();
+        return this.optional(element) ||  fileType.match(/(?:.gif|.jpg|.png|.bmp)$/);
+    }, "Please upload image file only");
+	
+	$("#frmadvert").validate({
+		
+		rules		: 	{
+							budget		:{required	: true},
+							total_click	:{required 	: true},
+							addlink		:{required : true,url:true},
+							banner		:{imageonly : true}
+							
+						},
+		messages	: 	{
+							budget		:	{required :	"<?php echo REQFIELD;?>"},
+							total_click	:	{required :	"<?php echo REQFIELD;?>"},
+							addlink		:	{required : "<?php echo REQFIELD;?>",url:"<?php echo ENTERURLONLY;?>"},
+							banner		:	{imageonly : "Please select image"}
+							
+						},
+		errorElement:'span'								
+	});
+	$("#frmprefer").validate({
+		rules		: 	{
+							currentpass	:	{ 
+												required	: 	true,
+												remote:{
+													url: '<?php echo SITE_MOD; ?>prefer/ajax.prefer.php',
+													type: "post",
+													data: {email: function() {return $("#currentpass").val();}},
+													complete: function(data){
+														return data;
+													}
+												}
+											},
+							newpass		: 	{
+												required	: 	true
+											},
+							verifypass	: 	{
+												required	: true,
+												equalTo		: '#newpass'
+											}
+						},
+		messages	: 	{
+							currentpass	:	{ 
+												required	: 	"<?php echo REQFIELD;?>",
+												remote		:	"<?php echo INVALIDPASSWORD;?>"
+											},
+							newpass		: 	{
+												required	: 	"<?php echo REQFIELD;?>"
+											},
+							verifypass	: 	{
+												required	: "<?php echo REQFIELD;?>",
+												equalTo		: '<?php echo DOESNOTMATCHPASSWORD;?>'
+											}
+						}
+	});
+	
+	$("#friendemail").validate({
+		rules	:	{
+						email	:	{
+											required	:	true,
+											remote:{
+													url:'<?php echo SITE_MOD; ?>prefer/ajax.prefer.php',
+													type: "post",
+													data: {email: function() {return $("#email").val();}},
+													complete: function(data){
+														return data;
+													}
+												}
+									}
+					},
+		messages	:	{
+							email	:	{
+											required	:	"<?php echo REQFIELD;?>",
+											remote		:	"<?php echo NOUSERFOUND;?>"
+										}
+						}
+	});
+	
+	$("#frmpreferdelete").validate({
+		rules		: 	{
+							username	:	{ 
+												required	: 	true,
+												remote:{
+													url: '<?php echo SITE_MOD; ?>prefer/ajax.prefer.php',
+													type: "post",
+													data: {username: function() {return $("#username").val();}},
+													complete: function(data){
+														return data;
+													}
+												}
+											},
+							password		: 	{
+												required	: 	true,
+												remote:{
+													url:'<?php echo SITE_MOD; ?>prefer/ajax.prefer.php',
+													type: "post",
+													data: {password: function() {return $("#password").val();}},
+													complete: function(data){
+														return data;
+													}
+												}
+											},
+							confirmdelete	:	{required	:	true}
+							
+						},
+		messages	: 	{
+							username		:	{ 
+												required	: 	"<?php echo REQFIELD;?>",
+												remote		:	"<?php echo USERNAMEINVALID;?>"
+											},
+							password		: 	{
+												required	: 	"<?php echo REQFIELD;?>",
+												remote		:	"Invalid Password"
+											},
+							confirmdelete	:	{required	:	"<?php echo REQFIELD;?>"}
+						}
+						
+	});
+	
+	
+});
+
+function addFriend() {
+	var fId = $("#email").val();
+	$.ajax({
+			type		:	"POST",
+			dataType	:	"json",
+			url			:	'<?php echo SITE_MOD; ?>prefer/ajax.prefer.php',
+			data		:	{
+								fId 		:  fId,
+								addfriend 	:  true							
+							},
+			success		:	function(data){
+								$("#friendlistdisplay").html(data);
+								$("#email").val("");
+							}
+		});
+}
+
+function deletefriend(id){
+	
+	if(confirm('Are you sure?'))
+	{	
+	$.ajax({
+			type		:	"POST",
+			dataType	:	"json",
+			url			:	'<?php echo SITE_MOD; ?>prefer/ajax.prefer.php',
+			data		:	{
+								friendId 		:  id,
+								removefriend 	:  true							
+							},
+			success		:	function(data){
+								
+								$("#friendlistdisplay").html(data);
+							}
+		});
+	}
+}
+function changePage()
+{
+	pageid = $("#pageId").val();
+	
+		$.ajax({
+			type		:	"POST",
+			url			:	'<?php echo SITE_MOD; ?>prefer/ajax.prefer.php',
+			data		:	{
+								pageId 			:  pageid,
+								pagname			:  true							
+							},
+			success		:	function(data){
+								
+								$("#slotname").html(data);
+								changeSlotCost();
+							}
+		});
+}
+function changeSlotCost(){
+	
+	//alert('a');
+	var page_id = $("#pageId").val();
+	var slot_id = $("#categoryName").val();
+	
+	$.ajax({
+			type		:	"POST",
+			url			:	'<?php echo SITE_MOD; ?>prefer/ajax.prefer.php',
+			data		:	{
+								page_id 		:  page_id,
+								slot_id			:  slot_id,
+								cost			:  true
+							},
+			success		:	function(data){
+								$("#cost").html(data);
+							}
+		});
+}
+function getBudget(m)
+{
+	var budget = $("#budget").val();
+	var total_click = $("#total_click").val();
+	var pageId = $("#pageId").val();
+	var slotId = $("#categoryName").val();
+	$.ajax({
+			type		:	"POST",
+			dataType	: 	"json",
+			url			:	'<?php echo SITE_MOD; ?>prefer/ajax.prefer.php',
+			data		:	{
+								budget 			:  budget,
+								total_click		:  total_click,
+								pageid			:  pageId,
+								slotid			:	slotId,
+								seleopt			:	m,
+								getadvtbgt		:  true
+							},
+			success		:	function(data){
+									//if(data["click"]!=""){
+										$("#total_click").val(data["click"]);
+										
+									//}
+									//if(data["cost"]!=""){
+										
+										$("#budget").val(data["cost"]);
+									//}
+							}
+		});
+}
+
+function displayPreview(files) {
+	//alert("slotid");
+	var ordinary= document.getElementById("categoryName").value;
+	//alert(ordinary);
+    var reader = new FileReader();
+    var img = new Image();
+
+
+    reader.onload = function (e) {
+        img.src = e.target.result;
+        fileSize = Math.round(files.size / 1024);
+        //alert("File size is " + fileSize + " kb");
+
+        img.onload = function () {
+			if(ordinary == 1)
+			{
+				if(this.width == "640" && this.height == "146")
+				{
+					//alert("Success");
+				}
+				else
+				{
+					alert("Error-Please Upload Proper Size Image");
+					$("#banner").val('');
+				}
+			}
+			else if(ordinary == 2)
+			{
+				if(this.width == "300" && this.height == "253")
+				{
+					//alert("Success");
+				}
+				else
+				{
+					alert("Error-Please Upload Proper Size Image");
+					$("#banner").val('');
+				}
+			}
+           // alert("width=" + this.width + " height=" + this.height);
+            //$('#preview').append('<img src="' + e.target.result + '"/>');
+        };
+    };
+    reader.readAsDataURL(files);
+}
+
+function imageCaution(a){
+	//alert(a);
+    var file = a.files[0];
+	//alert(file);
+    displayPreview(file);
+}
+
+function showMe(num)
+{
+	$('#div_one'+num).siblings('.section').hide();
+	$('#div_one'+num).fadeToggle(5);
+}
+</script>

@@ -1,0 +1,102 @@
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  
+<!--<link type="text/css" rel="stylesheet" href="<?php echo SITE_CSS;?>jquery-ui-1.10.3.full.min.css" />
+<link type="text/css" rel="stylesheet" href="<?php echo SITE_CSS;?>bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="<?php echo SITE_CSS;?>chosen.css" />
+
+<script type="text/javascript" src="<?php echo SITE_JS;?>bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo SITE_JS;?>chosen.jquery.min.js"></script>-->
+<?php if(getListingCount()>0){ ?>
+<script src="<?php echo SITE_JS;?>jquery.masonry.js"></script>
+<script src="<?php echo SITE_JS;?>jquery.infinitescroll.min.js"></script>
+<script type="text/javascript">
+
+jQuery(function(){
+  jQuery("#page-nav").load(function() {
+    jQuery("#container").masonry(); //this tweak is a fix on chrome and safari browser
+  });
+
+  jQuery('#container').masonry({
+    // options
+    itemSelector : '.box',
+    isResizable : 'true',
+    columnWidth : 10
+  });
+
+jQuery("#container").infinitescroll({
+  navSelector  : '#page-nav',    // selector for the paged navigation 
+  nextSelector : '#page-nav a',  // selector for the NEXT link (to page 2)
+  itemSelector : '.box',     // selector for all items you'll retrieve
+  donetext  : '<?php echo POSTLOADMSG;?>',
+  loadingImg : '<?php echo SITE_IMG; ?>loading.gif',
+  loadingText : '',
+  debug: false,
+  errorCallback: function() { 
+		$('#infscr-loading').animate({opacity: .8},100).fadeOut('normal');   
+  }
+  },
+  function( newElements ) {
+	var $newElems = $( newElements );
+	
+	setTimeout( function(){
+	  $newElems.imagesLoaded(function(){
+		jQuery("#container").masonry('appended',$newElems); 
+		jQuery("#container").masonry('reload'); 
+	  });
+	  
+	}, 10 );
+	
+  }
+);
+
+});
+</script>
+<script type="text/javascript">
+function _to_get_category() {
+	try {
+		$.ajax({
+			type		:	"POST",
+			dataType	:	"json",
+			url			:	"<?php echo SITE_URL; ?>modules/addpost/ajax.addpost.php",
+			data		:	{
+								categories	:	true
+							},
+			success		:	function(data) {
+								var categories = data["categories"];
+								$( "#tags" ).autocomplete({
+								  source: categories
+								});
+							}
+		})
+	} catch(e) {
+		console.log("Error in _to_get_category - " + e);
+	}
+}
+$(document).ready(function() {
+	//$("#form-field-select-3").chosen();
+	
+    _to_get_category();
+	
+	$.validator.addMethod("comboCheck",function(value,element,arg){ return arg!=value; },"This field is required");
+	/*$("#searchfrm").validate({
+		rules: {
+			search_name: {required: true},
+			
+		},
+		messages: {
+			search_name: {required:"Please Enter Any Title"},
+						
+		}, errorElement:'span'
+	});*/
+});
+</script>
+
+<script type="text/javascript">
+	function showMe(num)
+    {
+        $('#div_one'+num).siblings('.section').hide();
+        $('#div_one'+num).fadeToggle(5);
+    }
+</script>
+<?php }?>
+<?php echo $mainContent; ?>

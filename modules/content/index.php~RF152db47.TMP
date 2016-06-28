@@ -1,0 +1,32 @@
+<?php
+	#############################################################
+	# Project:			Project Name
+	# Developer ID:		38
+	# Page: 			Content page
+	# Started Date: 	26-Aug-2013
+	##############################################################
+	require_once("../../includes/config.php");
+	require_once("class.content.php");
+	
+	$left_panel=true;
+	$module = 'content';
+	$table = "tbl_content";	
+	
+	$pId = isset($_GET["pId"]) ? $_GET["pId"] : (isset($_POST["pId"]) ? $_POST["pId"] : '');
+	$pName = isset($_GET["pName"]) ? $_GET["pName"] : (isset($_POST["pName"]) ? $_POST["pName"] : '');
+
+	$mainObj = new Content($module, $pId);
+	
+	$pageTitle = $mainObj->pageTitle;
+	$metaDesc = $mainObj->metaDesc;	
+	$metaKeyword = $mainObj->metaKeyword;
+		
+	$winTitle = $pageTitle.' - '.SITE_NM;
+	$headTitle = $pageTitle;
+	$metaTag = getMetaTags(array("description"=>$metaDesc,
+			"keywords"=>$metaKeyword,
+			"author"=>SITE_NM));
+
+	$mainContent = $mainObj->getCont();	
+	require_once(DIR_THEME."default.nct");	
+?>

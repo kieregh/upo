@@ -1,0 +1,100 @@
+<script src="<?php echo SITE_JS;?>modernizr-transitions.js" type="text/javascript"></script>
+<div class="inner-heading"><?php echo $type; ?></div>
+<div class="alignemnt-masonry">
+	<section>
+        <div class="container alignemnt">
+			<?php echo $mainContent; ?>
+			<div class="clr"></div>			
+        </div>
+
+	</section>
+ </div>
+<nav id="page-nav">
+  <a href="page/2/"></a>
+</nav>
+<?php if(getListingCount()>0){ ?>
+<script src="<?php echo SITE_JS;?>jquery.masonry.js"></script>
+<script src="<?php echo SITE_JS;?>jquery.infinitescroll.min.js"></script>
+<script type="text/javascript">
+
+jQuery(function(){
+  jQuery("#page-nav").load(function() {
+    jQuery("#container").masonry(); //this tweak is a fix on chrome and safari browser
+  });
+
+  jQuery('.div_class').masonry({
+    // options
+    itemSelector : '.box',
+    isResizable : 'true',
+    columnWidth : 10
+  });
+
+jQuery("#container").infinitescroll({
+  navSelector  : '#page-nav',    // selector for the paged navigation 
+  nextSelector : '#page-nav a',  // selector for the NEXT link (to page 2)
+  itemSelector : '.box',     // selector for all items you'll retrieve
+  donetext  : 'No more posts to load.',
+  loadingImg : '<?php echo SITE_IMG; ?>loading.gif',
+  loadingText : '',
+  debug: false,
+  errorCallback: function() { 
+		$('#infscr-loading').animate({opacity: .8},100).fadeOut('normal');   
+  }
+  },
+  function( newElements ) {
+	var $newElems = $( newElements );
+	
+	setTimeout( function(){
+	  $newElems.imagesLoaded(function(){
+		jQuery("#container").masonry('appended',$newElems); 
+		jQuery("#container").masonry('reload'); 
+	  });
+	  
+	}, 10 );
+	
+  }
+);
+
+});
+</script> 
+
+<script type="text/javascript">
+$(function()  {
+	$("#friendemail").validate({
+		rules		: 	{
+							to			:	{ 
+												required	: 	true,
+												remote:{
+													url: '<?php echo SITE_MOD; ?>message/ajax.message.php',
+													type: "post",
+													data: {username: function() {return $("#to").val();}},
+													complete: function(data){
+														return data;
+													}
+												}
+											},
+							subject		: 	{
+												required	: 	true
+											}
+						},
+		messages	: 	{
+							to			:	{ 
+												required	: 	"<?php echo REQFIELD;?>",
+												remote		:	"<?php echo WRONGUSERNM;?>"
+											},
+							subject		: 	{
+												required	: 	"<?php echo REQFIELD;?>"
+											}
+						}
+	});
+	
+});
+
+function showMe(num)
+    {
+        $('#div_one'+num).siblings('.section').hide();
+        $('#div_one'+num).fadeToggle(5);
+    }
+	
+</script>
+<?php } ?>

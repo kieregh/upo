@@ -1,0 +1,146 @@
+<script src="<?php echo SITE_JS;?>modernizr-transitions.js" type="text/javascript"></script>
+<div class="alignemnt-masonry">
+	<section>
+        <div class="container alignemnt">
+			<?php echo $mainContent; ?>
+			<div class="clr"></div>			
+        </div>
+
+	</section>
+ </div>
+<nav id="page-nav">
+	<a href="page/2/"></a>
+</nav>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#editDesc").validate({
+			rules: {
+				redditDesc: {required	: true}
+				},
+			messages: {
+				redditDesc:{required:"<?php echo REQFIELD;?>"}
+				}
+	});
+});
+</script>
+
+<script type="text/javascript">
+function displayDescBlock()
+{
+	$( "div.editDescriptionBox" ).toggleClass("editDescriptionBoxshow");
+	$( "div.displayDesc" ).toggleClass("displayDescHide");
+	$("#redditDesc").val("");
+}
+function SubmitDescForm()
+{
+		var dataString = $("#editDesc").serialize();	  
+		$.ajax({
+			type: "POST",
+			url: "<?php echo SITE_MOD . $module .'/ajax.'.$module.'.php' ?>",
+			data: dataString,
+			cache: false,
+			success: function(data)
+			{
+				$(".displayDesc").html(data);
+				$( "div.displayDesc" ).toggleClass("displayDescHide");
+				$( "div.editDescriptionBox" ).toggleClass("editDescriptionBoxshow");
+				$("#redditDesc").val("");
+			}
+		});
+	
+}
+$("#multiRedditForm").validate({
+	rules: {
+		multiRedditName: { required: true}
+		}
+});
+function _to_get_category() {
+	try {
+		$.ajax({
+			type		:	"POST",
+			dataType	:	"json",
+			url			:	"<?php echo SITE_URL; ?>ajax.addpost.php",
+			data		:	{
+								categories	:	true
+							},
+			success		:	function(data) {
+								var categories = data["categories"];
+								$( "#tags" ).autocomplete({
+								  source: categories
+								});
+							}
+		})
+	} catch(e) {
+		console.log("Error in _to_get_category - " + e);
+	}
+}
+$(document).ready(function(){
+	 _to_get_category();
+});
+function deleteReddit(id){
+	$.ajax({
+			type		:	"POST",
+			dataType	:	"json",
+			url			:	"<?php echo SITE_MOD; ?>multireddit/ajax.multireddit.php",
+			data		:	{
+								id	:	id,
+								delreddit:true
+							},
+			success		:	function(data) {
+								window.location.href=SITE_URL;
+							}
+		});
+}
+</script>
+<?php if(getListingCount()>0){ ?>
+<script src="<?php echo SITE_JS;?>jquery.masonry.js"></script>
+<script src="<?php echo SITE_JS;?>jquery.infinitescroll.min.js"></script>
+<script type="text/javascript">
+
+$(function(){
+  $("#page-nav").load(function() {
+    $("#container").masonry(); //this tweak is a fix on chrome and safari browser
+  });
+
+  $('#container').masonry({
+    // options
+    itemSelector : '.box',
+    isResizable : 'true',
+    columnWidth : 10
+  });
+
+$("#container").infinitescroll({
+  navSelector  : '#page-nav',    // selector for the paged navigation 
+  nextSelector : '#page-nav a',  // selector for the NEXT link (to page 2)
+  itemSelector : '.box',     // selector for all items you'll retrieve
+  donetext  : 'No more posts to load.',
+  loadingImg : '<?php echo SITE_IMG; ?>loading.gif',
+  loadingText : '',
+  debug: false,
+  errorCallback: function() { 
+		$('#infscr-loading').animate({opacity: .8},100).fadeOut('normal');   
+  }
+  },
+  function( newElements ) {
+	var $newElems = $( newElements );
+	
+	setTimeout( function(){
+	  $newElems.imagesLoaded(function(){
+		$("#container").masonry('appended',$newElems); 
+		$("#container").masonry('reload'); 
+	  });
+	  
+	}, 10 );
+	
+  }
+);
+
+});
+function showMe(num)
+    {
+        $('#div_one'+num).siblings('.section').hide();
+        $('#div_one'+num).fadeToggle(5);
+    }
+</script> 
+
+<?php } ?>

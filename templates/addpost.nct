@@ -1,0 +1,130 @@
+<script type="text/javascript">
+function _to_get_category() {
+	try {
+		$.ajax({
+			type		:	"POST",
+			dataType	:	"json",
+			url			:	"<?php echo SITE_URL; ?>ajax.addpost.php",
+			data		:	{
+								categories	:	true
+							},
+			success		:	function(data) {
+								var categories = data["categories"];
+								$( "#tags" ).autocomplete({
+								  source: categories
+								});
+							}
+		})
+	} catch(e) {
+		console.log("Error in _to_get_category - " + e);
+	}
+}
+function changeText()
+{
+	cname = $("#tags").val();
+	
+		$.ajax({
+			type		:	"POST",
+			url			:	'<?php echo SITE_MOD; ?>addpost/ajax.addpost.php',
+			data		:	{
+								catId 	:  cname
+							},
+			success		:	function(data){
+								$("#catText").html(data);
+							}
+		});	
+}
+$(document).ready(function() {
+	//$("#form-field-select-3").chosen();
+	
+    _to_get_category();
+	
+	$.validator.addMethod("comboCheck",function(value,element,arg){ return arg!=value; },"This field is required");
+	$.validator.addMethod("getjustimageurl",function(value,element,arg){ 
+					var ret = false;
+					if(value ==""){
+						ret = true;					
+					return ret;
+					}
+					else{
+					fileExt = value.split('.').pop();
+					fileExt = fileExt.toLowerCase();
+					if(fileExt=="jpg" || fileExt=="jpeg" || fileExt=="png" || fileExt=="gif")
+						ret = true;					
+					return ret;
+					}
+		},"Please enter a valid URL.");
+	$("#frmpost").validate({
+		rules: {
+			title: {required: true},
+			description:{required: true},
+			categoryName:{required: true,
+					remote:{
+							url: SITE_URL+"modules/addpost/ajax.addpost.php",
+							type: "post",
+							data: {categoryName: function() {return $("#tags").val();}},
+							complete: function(data){
+								return data;
+							}
+				}	
+			},
+			
+			postImageUrl:{url:true, getjustimageurl:true},
+			captcha: {required: true,remote:"<?php echo SITE_URL;?>modules/addpost/ajax.addpost.php"}
+			
+		},
+		messages: {
+			title: {required:"<?php echo REQFIELD;?>"},
+			description: {required:"<?php echo REQFIELD;?>"},
+			categoryName:{required:"<?php echo REQFIELD;?>",remote:"<?php echo CATEGORYNOTEXISTS;?>"},
+			
+			captcha: {required: "<?php echo REQFIELD;?>"}
+						
+		}, errorElement:'span'
+	});
+	
+	$.validator.addMethod("imageonly", function(value,element){     
+        var pathLength = value.length;
+        var lastDot = value.lastIndexOf(".");
+        var fileType = value.substring(lastDot,pathLength).toLowerCase();
+        return this.optional(element) ||  fileType.match(/(?:.gif|.jpg|.png|.bmp)$/);
+    }, "Please upload image file only");
+	
+	$("#frmlink").validate({
+		rules: {
+			title: {required: true},
+			url:{required: true,url:true},
+			categoryName:{required: true,
+						remote:{
+							url: SITE_URL+"modules/addpost/ajax.addpost.php",
+							type: "post",
+							data: {categoryName: function() {return $("#tags").val();}},
+							complete: function(data){
+								return data;
+							}
+				}
+			},
+			
+			postImageUrl:{url:true, getjustimageurl:true},
+			captcha: {required: true,remote:"<?php echo SITE_URL;?>modules/addpost/ajax.addpost.php"}
+
+		},
+		messages: {
+			title: {required:"<?php echo REQFIELD;?>"},
+			url: {required:"<?php echo REQFIELD;?>",url:"<?php echo ENTERURLONLY;?>"},
+			categoryName:{required:"<?php echo REQFIELD;?>",remote:"<?php echo CATEGORYNOTEXISTS;?>"},
+			
+			captcha: {required: "<?php echo REQFIELD;?>"}			
+		}, errorElement:'span'
+	});
+});
+</script>
+<script type="text/javascript">
+	function showMe(num)
+    {
+        $('#div_one'+num).siblings('.section').hide();
+        $('#div_one'+num).fadeToggle(5);
+    }
+</script>
+
+<?php echo $mainContent; ?>

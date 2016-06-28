@@ -1,0 +1,166 @@
+<script type="text/javascript" src="<?php echo SITE_ADM_JS; ?>jquery.crypt.js"></script>
+<script src="<?php echo SITE_INC; ?>jcrop/js/jquery.Jcrop.js"></script>
+<link rel="stylesheet" href="<?php echo SITE_INC; ?>jcrop/css/jquery.Jcrop.css" type="text/css" />
+<script type="text/javascript" src="<?php echo SITE_JS;?>ajaxupload.3.5.js" ></script>
+
+<?php
+if($action == 'edit-profile') { ?>
+<script type="text/javascript">
+	  function updateCoords(c)
+	  {
+		$('#x,#y,#w,#h').val('');
+		$('#x').val(c.x);
+		$('#y').val(c.y);
+		$('#w').val(c.w);
+		$('#h').val(c.h);
+	  };
+	
+	  function checkCoords()
+	  {
+		if (parseInt($('#w').val())) return true;
+		alert('Please select a crop region then press submit.');
+		return false;
+	  };
+		var jcrop_api;
+		$(document).ready(function() {
+			$('.dialogContainer').dialog({title:'Crop image',modal:true,width:'490px',autoOpen: false,close:$('#cancelCrop').click()});
+			$('#crop').click(function(){
+				if(checkCoords()){
+					jcrop_api.destroy();
+					$('#cropbox').attr('src','');
+					$('.dialogContainer').dialog('close');
+					var x=$('#x').val();
+					var y=$('#y').val();
+					var w=$('#w').val();
+					var h=$('#h').val();
+					//$('#view_image').attr('src',$('#profile_pic').val())
+					$('.pro_image').css({width: w,
+					  height: h,
+					  background: "url('" + $('#profile_pic').val() + "')",
+					  backgroundPosition: -x + "px " + -y + "px"})
+				}
+			})
+			$('#cancelCrop').click(function(){	// reset element and destroy jcrop
+				jcrop_api.destroy();
+				$('#cropbox').attr('src','');
+				$('#x,#y,#w,#h,#profile_pic').val('');
+				$('.dialogContainer').dialog('close');
+			})
+			var btnUpload=$('#upload');
+			var status=$('#status');
+			new AjaxUpload(btnUpload, {
+				action: SITE_URL+'modules/settings/ajax.settings.php',
+				name: 'uploadfile',
+				onSubmit: function(file, ext){
+					 if (! (ext && /^(jpg|png|jpeg|gif)$/.test(ext))){ 
+						// extension is not allowed 
+						status.text('Only .jpg,.gif or .png files are allowed');
+						return false;
+					}
+					status.text('Uploading...');
+				},
+				onComplete: function(file, response){
+					//alert(response);
+					status.text('');
+					if(response!=""){
+						$('.dialogContainer').dialog('open'); 
+						$('#profile_pic').val(response);
+						jcrop_api = $.Jcrop('#cropbox',{
+						  aspectRatio: 1,
+						  onSelect: updateCoords,
+						  onChange: updateCoords,
+						  minSize:[150,150],
+						  setSelect:[0,0,150,150]
+						});
+						jcrop_api.setImage(response);
+					}
+				}
+			});
+
+			$.validator.addMethod("comboCheck",function(value,element,arg){ return arg!=value; },"This field is required");
+			$("#frmpro").validate({
+				
+				rules: {
+					name: {required: true},
+					birthDate: {required: true},
+					address: {required: true},
+					city: {required: true},
+					zipCode: {required: true},
+					website: {required: true},
+					state: {comboCheck:"0"},
+					shoeId: {comboCheck:"0"},
+					derssId: {comboCheck:"0"},
+					aboutMe: {required: true}
+				},
+				messages: {
+					name:{required:"This field is required"},
+					birthDate:{required:"This field is required"},
+					address: { required:"This field is required"},
+					city:{required:"This field is required"},
+					zipCode: {required:"This field is required"},
+					website: {required:"This field is required"},
+					state: { comboCheck: "This field is required" },
+					shoeId: { comboCheck: "This field is required" },
+					derssId: { comboCheck: "This field is required" },
+					aboutMe: { required:"This field is required"}
+				}
+			});
+	 });
+	$(function() {
+	  $("#birthDate").datepicker(
+		{
+		  minDate: new Date(1900,1-1,1), maxDate: '-18Y',
+		  dateFormat: 'dd-mm-yy',
+		  //defaultDate: new Date(1970,1-1,1),
+		  changeMonth: true,
+		  changeYear: true,
+		  yearRange: '-110:-18'
+		}
+	  );					
+	});
+</script>
+<div class="dialogContainer" style="display:none">
+	<img src="" id="cropbox" />
+    <input class="btn_glossy" type="button" name="crop" id="crop" value="Crop" />
+    <input class="btn_glossy" type="button" name="cancelCrop" id="cancelCrop" value="Cancel"  />
+</div>
+<?php 
+}
+else if($action == 'change-password') {?>
+<script type="text/javascript">
+	$(document).ready(function(){
+	
+$.validator.addMethod("nPassword", function(value, element) {
+		return this.optional(element) || /^[a-zA-Z0-9]+$/i.test(value);
+	}, "Invalid Password.");
+	
+$.validator.addMethod("OldPswCheck", function(value, element) {
+		 var oldpswdtxt = $().crypt({method:"md5",source:value});
+		 var oldpswval = $("#passvalue").val();
+		 return (oldpswval==oldpswdtxt);
+		 }, "&nbsp;Wrong Password");
+
+$('#frmchp').validate({
+		rules:{
+			oPassword:{required:true,OldPswCheck:true},
+			nPassword: {required: true,nPassword: true,minlength: 6},
+			cPassword: {required: true,equalTo: '#nPassword'}
+			},
+		messages:{
+			oPassword:{required:"This Field is Required"},
+			nPassword: {required: "This Field is Required",nPassword: "Invalid Password",minlength: "Short Password"},
+			cPassword:{required: "This Field is Required",equalTo: "Password not Match"}		
+		}
+	});	
+});
+</script>
+
+
+<?php }?>
+
+<div class="edit_column_rgt edit_redius">
+	<div class="edit_section">
+     	<h2><?php echo $headTitle; ?></h2>
+		<?php echo $mainContent; ?>
+    </div>
+</div>

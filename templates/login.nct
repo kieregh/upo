@@ -1,0 +1,19 @@
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$("#frmLogin").validate({
+		rules: {
+			password: {required: true},
+			email: {required: true,email:true}
+		},
+		messages: {
+			email: { email:"Email is not valid"}
+			
+		}
+	});
+
+ });
+</script>
+<div id="mainContent">
+	<?php echo $mainContent; ?>
+</div>
