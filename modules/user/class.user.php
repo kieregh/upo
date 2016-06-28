@@ -68,8 +68,10 @@ class user {
 				$selRes = $selRes." limit $offset, $limit";
 				$qSelRes = $this->db->query($selRes);
 				if ( $totalRows > 0 ) {
+					$i=$offset+1;
 					while($fetchValues = mysql_fetch_array($qSelRes)) {
-						$content .= postlisthtml($fetchValues);
+						$content .= postlisthtml($fetchValues,$i);
+						$i++;
 					}
 				}
 				else
@@ -134,8 +136,10 @@ class user {
 				$selRes = $selRes." limit $offset, $limit";
 				$qSelRes = $this->db->query($selRes);
 				if ( $totalRows > 0 ) {
+					$i=$offset+1;
 					while($fetchValues = mysql_fetch_array($qSelRes)) {
-						$content .= postlisthtml($fetchValues);
+						$content .= postlisthtml($fetchValues,$i);
+						$i++;
 					}
 				}
 				else
@@ -224,8 +228,10 @@ class user {
 				$selRes = $selRes." limit $offset, $limit";
 				$qSelRes = $this->db->query($selRes);
 				if ( $totalRows > 0 ) {
+					$i=$offset+1;
 					while($fetchValues = mysql_fetch_array($qSelRes)) {
-						$content .= postlisthtml($fetchValues);
+						$content .= postlisthtml($fetchValues,$i);
+						$i++;
 					}
 				}
 				else
@@ -292,8 +298,10 @@ class user {
 				$selRes = $selRes." limit $offset, $limit";
 				$qSelRes = $this->db->query($selRes);
 				if ( $totalRows > 0 ) {
+					$i=$offset+1;
 					while($fetchValues = mysql_fetch_array($qSelRes)) {
-						$content .= postlisthtml($fetchValues);
+						$content .= postlisthtml($fetchValues,$i);
+						$i++;
 					}
 				}
 				else
@@ -361,8 +369,10 @@ class user {
 				$selRes = $selRes." limit $offset, $limit";
 				$qSelRes = $this->db->query($selRes);
 				if ( $totalRows > 0 ) {
+					$i=$offset+1;
 					while($fetchValues = mysql_fetch_array($qSelRes)) {
-						$content .= postlisthtml($fetchValues);
+						$content .= postlisthtml($fetchValues,$i);
+						$i++;
 					}
 				}
 				else
@@ -429,8 +439,10 @@ class user {
 				$selRes = $selRes." limit $offset, $limit";
 				$qSelRes = $this->db->query($selRes);
 				if ( $totalRows > 0 ) {
+					$i=$offset+1;
 					while($fetchValues = mysql_fetch_array($qSelRes)) {
-						$content .= postlisthtml($fetchValues);
+						$content .= postlisthtml($fetchValues,$i);
+						$i++;
 					}
 				}
 				else
@@ -498,8 +510,10 @@ class user {
 				$selRes = $selRes." limit $offset, $limit";
 				$qSelRes = $this->db->query($selRes);
 				if ( $totalRows > 0 ) {
+					$i=$offset+1;
 					while($fetchValues = mysql_fetch_array($qSelRes)) {
-						$content .= postlisthtml($fetchValues);
+						$content .= postlisthtml($fetchValues,$i);
+						$i++;
 					}
 				}
 				else
@@ -565,8 +579,10 @@ class user {
 				$selRes = $selRes." limit $offset, $limit";
 				$qSelRes = $this->db->query($selRes);
 				if ( $totalRows > 0 ) {
+					$i=$offset+1;
 					while($fetchValues = mysql_fetch_array($qSelRes)) {
-						$content .= postlisthtml($fetchValues);
+						$content .= postlisthtml($fetchValues,$i);
+						$i++;
 					}
 				}
 				else

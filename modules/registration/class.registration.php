@@ -35,19 +35,19 @@ class Registration
                                 <h1>'.REGISTRATION.'</h1> 
                                 <p> 
                                     <label for="username" class="uname" data-icon="u" >'.USERNAME.':</label>
-                                    '.$this->fields->textBox(array("onlyField"=>true,"name"=>"username","extraAtt"=>'placeholder="Username"')).'
+                                    '.$this->fields->textBox(array("onlyField"=>true,"name"=>"username","extraAtt"=>'placeholder="영문 숫자만 가능"')).'
 								</p>
                                 <p> 
                                     <label for="emailsignup" class="youmail" data-icon="e"> '.YOUREMAIL.':</label>
-                                    '.$this->fields->textBox(array("onlyField"=>true,"name"=>"email","id"=>"email","extraAtt"=>'placeholder="mysupermail@mail.com"')).'
+                                    '.$this->fields->textBox(array("onlyField"=>true,"name"=>"email","id"=>"email","extraAtt"=>'placeholder="mymail@mail.com"')).'
 								</p>
                                 <p> 
                                     <label for="password" class="youpasswd" data-icon="p">'.YOURPASSWORD.':</label>
-                                    '.$this->fields->password(array("onlyField"=>true,"name"=>"password","extraAtt"=>'placeholder="eg. X8df!90EO"')).'
+                                    '.$this->fields->password(array("onlyField"=>true,"name"=>"password","extraAtt"=>'placeholder="예) X8df!90EO"')).'
 								</p>
                                 <p> 
                                     <label for="password" class="youpasswd" data-icon="p">'.CONFIRMPASS.':</label>
-                                    '.$this->fields->password(array("onlyField"=>true,"name"=>"cpassword","extraAtt"=>'placeholder="eg. X8df!90EO"')).'
+                                    '.$this->fields->password(array("onlyField"=>true,"name"=>"cpassword","extraAtt"=>'placeholder="예) X8df!90EO"')).'
 								</p>
 								<p>
 									<label for="Captcha" class="cap">'.CAPTCHA.':</label>

@@ -157,7 +157,7 @@ End-general-css
 	width: 27px;
 	height: 27px;
 	float: left;
-	margin: 0px 6px 0px 24px;
+	margin: 10px 6px 0px 24px;
 	text-indent: -9999px;
 	/* CSS3 Transitions */
 }
@@ -166,7 +166,7 @@ End-general-css
 	width: 27px;
 	height: 27px;
 	float: left;
-	margin: 0px 6px 0px 24px;
+	margin: 10px 6px 0px 24px;
 	text-indent: -9999px;
 	/* CSS3 Transitions */
 }
@@ -183,7 +183,7 @@ End-general-css
 .group {
 	background-position: 0px -27px !important;
 }
-.like_point{background:#ffffff; border-radius:10px; padding:5px 10px; font-size:13px; font-weight:bold; color:#c8c8c8; display:table-cell; text-align:center; vertical-align:middle; width:55px; margin:1px 0px; float:left}
+.like_point{background:#ffffff; border-radius:10px; padding:0px 10px; font-size:13px; font-weight:bold; color:#c8c8c8; display:table-cell; text-align:center; vertical-align:middle; width:55px; margin:0px 0px; float:left}
 .mdl_rgt_column{float:left; width:310px;}
 .login_box{width:100%; margin:0px;}
 .login_box .login_heading{background:#434343; border:1px solid #353535; border-radius:6px 6px 0 0; width:100%;}
@@ -961,4 +961,12 @@ margin-top: -7px;}
 }
 .float-left{
 	float: left;
+}
+
+.icon-serial
+{
+    font-size: 17px;
+    position: absolute;
+    top: 36px;
+    color:#c8c8c8
 }

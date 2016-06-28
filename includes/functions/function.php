@@ -1283,7 +1283,7 @@ function getUserType($userId) {
 	$memberRes = mysql_fetch_assoc($memberType);
 	return $memberRes["isMember"];
 }
-function postlisthtml($fetchValues, $withclass = true) {
+function postlisthtml($fetchValues, $i ,$withclass = true) {
 	/*print "<pre>";
 		print_r($fetchValues);
 	print "</pre>";*/
@@ -1391,7 +1391,8 @@ function postlisthtml($fetchValues, $withclass = true) {
 	}
 	$total_vote=$total_vote==0?'<span style="font-size:30px;font-weight:bold;">•</span>':$total_vote;
 	$catId = getCategoryid($categoryName);
-	$pDetail .= '<div class="icons-wrapper">
+	$pDetail .= '<div class="icon-serial">'.$i.'</div>
+					<div class="icons-wrapper">
 						<a href="javascript:void(0);" class="' . $upACt . ' document up" id="up' . $id . '" onclick="voting(\'' . $id . '\',\'u\',\'p\',\'' . $islogin . '\',this.id)">UP</a>
 						<div class="like_point" id="vote-' . $id . '">' . $total_vote. '</div>
 						<a href="javascript:void(0);" class="' . $downACt . ' group down" id="down' . $id . '" onclick="voting(\'' . $id . '\',\'d\',\'p\',\'' . $islogin . '\',this.id)" >DOWN</a>
@@ -1426,12 +1427,6 @@ function postlisthtml($fetchValues, $withclass = true) {
 							</a>
 						</div>' : NULL) . '
 						<p>' . $dateDiff . ' <a href="' . SITE_URL . 'user/' . $username . '/overview/">' . $username . '</a> ' . BY . ' <a href="' . SITE_URL . 'c/' . $categoryName . '">/c/' . $categoryName . '</a> 에 ' . SUBMITTED . '</p>
-						<p>
-						    <span>총 Up 투표수 : '.$fetchValues['v_up'].'</span><br/>
-						    <span>총 Down 투표수 : '.$fetchValues['v_down'].'</span><br/>
-						    <span>포스트 작성일 : '.$createdDate.'</span><br/>
-						    <span>순위 점수  : '.$fetchValues['r_score'].'</span>
-						</p>
 						<div class="comment_txt">
 							<a href="' . SITE_URL . 'comments/' . $id . '/' . $title . '" title="' . COMMENTS . '">' . getTotalComments($id) . COMMENTS . '</a>
 						</div>

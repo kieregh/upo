@@ -84,7 +84,7 @@ class Home {
 			}
 		}
 		$whereCondition = $hidecond . $CATcond;
-		$selRes = "SELECT A.*, B.refId, B.refType, B.voteType, tbl_categories.categoryName, tbl_users.username, A.embeddcode FROM tbl_post AS A INNER JOIN tbl_categories ON (tbl_categories.id = A.catId) INNER JOIN tbl_users ON (A.uid = tbl_users.id) LEFT JOIN `tbl_votes` AS B ON A.id=B.refId AND refType ='p' AND voteType ='u' AND B.createdDate<='" . date("Y-m-d 00:00:00") . "' where A.isActive='y' " . $whereCondition . " GROUP BY A.id ORDER BY A.v_up DESC, A.r_score DESC";
+		$selRes = "SELECT A.*, B.refId, B.refType, B.voteType, tbl_categories.categoryName, tbl_users.username, A.embeddcode FROM tbl_post AS A INNER JOIN tbl_categories ON (tbl_categories.id = A.catId) INNER JOIN tbl_users ON (A.uid = tbl_users.id) LEFT JOIN `tbl_votes` AS B ON A.id=B.refId AND refType ='p' AND voteType ='u' AND B.createdDate<='" . date("Y-m-d 00:00:00") . "' where A.isActive='y' " . $whereCondition . " GROUP BY A.id ORDER BY A.r_score DESC";
 		$qSelRes = $this->db->query($selRes);
 		$totalRows = mysql_num_rows($qSelRes);
 		$pager = getPagerData($totalRows, LIMIT, $pageNo);
@@ -99,10 +99,13 @@ class Home {
 			$page = $pager->page;
 			$selRes = $selRes . " limit $offset, $limit";
 			$qSelRes = $this->db->query($selRes);
-
+			$i=$offset+1;
 			if ($totalRows > 0) {
 				while ($fetchValues = mysql_fetch_array($qSelRes)) {
-					$content .= postlisthtml($fetchValues);
+
+					$content .= postlisthtml($fetchValues,$i);
+					$i++;
+
 				}
 			}
 		}
@@ -129,7 +132,7 @@ class Home {
 				while ($fetchValues = mysql_fetch_array($qrySelCategory)) {
 					$categoryName = $this->db->filtering($fetchValues["categoryName"], 'output', 'string', 'ucwords');
 					$catId = getCategoryid($categoryName);
-					$content .= '<li><a href="' . SITE_URL . 'c/' . urlencode(str_replace('/', ' ', $categoryName)) . '/" title="' . $categoryName . '">' . $categoryName . '</a></li> ';
+					$content .= '<li><a href="' . SITE_URL . 'c/' . str_replace('/', ' ', $categoryName) . '/" title="' . $categoryName . '">' . $categoryName . '</a></li> ';
 				}
 				$content .= '<li class="underlineli"></li>';
 			}
@@ -147,7 +150,7 @@ class Home {
 				while ($fetchValues = mysql_fetch_array($qrySelCategory)) {
 					$categoryName = $this->db->filtering($fetchValues["categoryName"], 'output', 'string', '');
 					$catId = getCategoryid($categoryName);
-					$content .= '<li><a href="' . SITE_URL . 'c/' . urlencode(str_replace('/', ' ', $categoryName)) . '/" title="' . $categoryName . '">' . $categoryName . '</a></li>';
+					$content .= '<li><a href="' . SITE_URL . 'c/' . str_replace('/', ' ', $categoryName) . '/" title="' . $categoryName . '">' . $categoryName . '</a></li>';
 				}
 			}
 		}
@@ -163,7 +166,7 @@ class Home {
 			while ($fetchValues = mysql_fetch_array($qrySelCategory)) {
 				$categoryName = $this->db->filtering($fetchValues["categoryName"], 'output', 'string', '');
 				$catId = getCategoryid($categoryName);
-				$content .= ' - <a href="' . SITE_URL . 'c/' . urlencode(str_replace('/', ' ', $categoryName)) . '/" title="' . $categoryName . '">' . $categoryName . '</a>';
+				$content .= ' - <a href="' . SITE_URL . 'c/' . str_replace('/', ' ', $categoryName) . '/" title="' . $categoryName . '">' . $categoryName . '</a>';
 			}
 			$content .= '</span>';
 		}
@@ -445,10 +448,10 @@ class Home {
 					ORDER BY tbl_post.id DESC");
 
 		if (mysql_num_rows($sqlSponceredList) > 0) {
-
+		
 			while ($fetchValues = mysql_fetch_array($sqlSponceredList)) {
-
-				$content .= postlisthtml($fetchValues, false);
+				$content .= postlisthtml($fetchValues, false,$i=0);
+				
 
 			}
 

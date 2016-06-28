@@ -104,8 +104,10 @@ class addPost {
 									<div class="hot_listing">
 										<ul id="container">';
 			if(mysql_num_rows($qrysel) > 0) {
+				$i=$offset+1;
 				while($fetchValues = mysql_fetch_assoc($qrysel)) {
-					$content .= postlisthtml($fetchValues);
+					$content .= postlisthtml($fetchValues,$i);
+					$i++;
 				}		
 			}
 			else {

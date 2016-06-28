@@ -86,7 +86,7 @@ class addPost {
                     <div class="post_box">
 						<div class="ui-widget">
 						  <label for="tags"><font color="#FF0000">*</font>'.CATEGORY.':</label>
-						  <input id="tags" type="text" name="categoryName" value="'.$this->cat.'" onblur="changeText();">
+						  <input id="tags" type="text" name="categoryName" onblur="changeText();" value="'.$this->cat.'">
 						</div>
 						<div id="catText"></div>
                     </div>

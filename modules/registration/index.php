@@ -11,8 +11,8 @@
 	$right_panel=false;
 	$module = 'registration';
 	$table = 'tbl_users';
-	$winTitle = 'Registration - '.SITE_NM;
-    $headTitle = 'Registration';
+	$winTitle = '회원가입 - '.SITE_NM;
+    $headTitle = '회원가입';
     $metaTag = getMetaTags(array("description"=>$winTitle,
 			"keywords"=>$headTitle,
 			"author"=>SITE_NM));

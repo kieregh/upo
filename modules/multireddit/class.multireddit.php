@@ -88,8 +88,10 @@ class multireddit{
 
 			$qSelRes = $this->db->query($selRes);
 			if ( $totalRows > 0 ) {
-				while($fetchValues = mysql_fetch_array($qSelRes)) {
-					$content .= postlisthtml($fetchValues);
+				$i=$offset+1;
+				while ($fetchValues = mysql_fetch_array($qSelRes)) {
+					$content .= postlisthtml($fetchValues,$i);
+					$i++;
 				}
 			}
 			else

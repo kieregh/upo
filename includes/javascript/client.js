@@ -94,7 +94,7 @@ function voting(e, t, n, r,sellink) {
             }
         })
     } else {
-        alert("Please login to Vote")
+        alert("로그인 후 사용해주세요.")
     }
 }
 

@@ -29,7 +29,7 @@ class comments {
 			INNER JOIN tbl_users ON (tbl_post.uid = tbl_users.id)
 			 WHERE tbl_post.id='".$postId."'");
 			 $Postres = mysql_fetch_assoc($SqlPost);
-			 $content.=postlisthtml($Postres);
+			 $content.=postlisthtml($Postres,$i=0);
 			
 			if($this->sessUserId>0)
 			{
@@ -44,7 +44,7 @@ class comments {
 			}
 			else {
 				$content.= '<div class="flclear"></div>
-				<p>Please <a href="'.SITE_URL.'login">login</a> to comment this post. </p>';
+				<p><a href="'.SITE_URL.'login">로그인</a> 후 포스트에 댓글을 등록할 수 있습니다. </p>';
 			}
 			$content.='<div id="allcomments">'.$this->getComment($postId).'</div>';
 		return $content;
