@@ -187,7 +187,7 @@ End-general-css
 .group {
 	background-position: 0px -27px !important;
 }
-.like_point{border-radius:10px; padding:0px 10px; font-size:17px; font-weight:bold; color:#c8c8c8; display:table-cell; text-align:center; vertical-align:middle; width:55px; margin:4px 0px; float:left}
+.like_point{border-radius:10px; padding:0px 10px; font-size:13px; font-weight:bold; color:#c8c8c8; display:table-cell; text-align:center; vertical-align:middle; width:55px; margin:4px 0px; float:left}
 .mdl_rgt_column{float:left; width:310px;}
 .login_box{width:100%; margin:0px;}
 .login_box .login_heading{background:#434343; border:1px solid #353535; border-radius:6px 6px 0 0; width:100%;}
@@ -972,9 +972,9 @@ margin-top: -7px;}
 {
     font-size: 16px;
     position: absolute;
-    top: 32px;
+    top: 37px;
     color:#c6c6c6 
 }
 .link_url {font-size: 10px;color:#888 !important;}
-.icons-wrapper .vote-dot {font-weight: bold;font-size: 13px;color : #c6c6c6;}
+.icons-wrapper .vote-dot {font-weight: bold;font-size: 17px;color : #c6c6c6;}
 .comment_txt a, .share a, .hide a,.save a,.report a {font-size: 10px;font-weight: bold;color: #888;}
