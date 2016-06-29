@@ -1389,7 +1389,7 @@ function postlisthtml($fetchValues, $i ,$withclass = true) {
 		$upACt = 'icon';
 		$downACt = 'icon';
 	}
-	$total_vote=$total_vote==0?'<span style="font-size:30px;font-weight:bold;">•</span>':$total_vote;
+	$total_vote=$total_vote==0?'<span class="vote-dot">•</span>':$total_vote;
 	$catId = getCategoryid($categoryName);
 	$pDetail .= '<div class="icon-serial">'.$i.'</div>
 					<div class="icons-wrapper">

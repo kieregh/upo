@@ -37,14 +37,13 @@ $content .= (isset($sessUserId) && $sessUserId > 0)
 ? '<div class="welcomeuser">' . HI . ' - <a href="' . SITE_URL . 'user/' . $sessUsername . '/overview/">' . ucfirst($sessUsername) . '</a>  |  <a href="' . SITE_URL . 'message/compose/"><img src="' . SITE_IMG . 'message.png" /></a>    |
 					<a href="' . SITE_URL . 'prefer/password/">' . PREFERENCE . '</a>	|	<a href="' . SITE_URL . 'logout">' . LOGOUT . '</a></div>'
 : '<div class="login_box">
-						<div class="login_heading">
-							<h3>' . LOGIN . '</h3>
-						</div>
 						<div class="login_area">
 							<form class="fieldArea" name="Loginform" action="' . SITE_URL . 'login" method="post">
+							<div class="input-wrap">
 							' . $fields->textBox(array("onlyField" => true, "name" => "email", "extraAtt" => 'placeholder="' . USERNAME . '"', 'value' => $email)) . '
 							
 							' . $fields->Password(array("onlyField" => true, "name" => "password", "extraAtt" => 'placeholder="' . PASSWORD . '"', 'value' => "$password")) . '
+							</div>
 							<div class="clearfix"></div>
 							<div class="signin_label"><label><input type="checkbox" id="remember" name="remember" ' . $checked . ' value="y"/> ' . STAYSIGNIN . '</label></div>
 							<div class="forgot_label"><a href="' . SITE_URL . 'forgot" title="' . FORGOTPASSWORD . '">' . FORGOTPASSWORD . '</a></div>
